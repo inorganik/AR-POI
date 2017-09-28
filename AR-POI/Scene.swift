@@ -2,7 +2,7 @@
 //  Scene.swift
 //  AR-POI
 //
-//  Created by Jamie Perkins on 9/28/17.
+//  Created by Jamie Perkins on 9/26/17.
 //  Copyright © 2017 Inorganik Produce, Inc. All rights reserved.
 //
 

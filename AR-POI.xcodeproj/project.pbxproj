@@ -10,10 +10,16 @@
 		7D40B2F51F7D27AF0081619B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D40B2F41F7D27AF0081619B /* AppDelegate.swift */; };
 		7D40B2F71F7D27AF0081619B /* Scene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D40B2F61F7D27AF0081619B /* Scene.sks */; };
 		7D40B2F91F7D27AF0081619B /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D40B2F81F7D27AF0081619B /* Scene.swift */; };
-		7D40B2FB1F7D27AF0081619B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D40B2FA1F7D27AF0081619B /* ViewController.swift */; };
 		7D40B2FE1F7D27AF0081619B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D40B2FC1F7D27AF0081619B /* Main.storyboard */; };
 		7D40B3001F7D27AF0081619B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D40B2FF1F7D27AF0081619B /* Assets.xcassets */; };
 		7D40B3031F7D27AF0081619B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D40B3011F7D27AF0081619B /* LaunchScreen.storyboard */; };
+		7D40B30B1F7D27E60081619B /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D40B30A1F7D27E60081619B /* ARViewController.swift */; };
+		7D40B30D1F7D27F10081619B /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D40B30C1F7D27F10081619B /* ContainerViewController.swift */; };
+		7D40B3141F7D28080081619B /* ARAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D40B30F1F7D28000081619B /* ARAnnotation.swift */; };
+		7D40B3151F7D280A0081619B /* ARPOIUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D40B3101F7D28000081619B /* ARPOIUI.swift */; };
+		7D40B3161F7D280D0081619B /* CustomViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D40B3111F7D28000081619B /* CustomViews.swift */; };
+		7D40B3181F7D28120081619B /* MatrixHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D40B3131F7D28000081619B /* MatrixHelper.swift */; };
+		7D40B31A1F7D29F00081619B /* PlaceLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D40B3191F7D29F00081619B /* PlaceLoader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,11 +27,17 @@
 		7D40B2F41F7D27AF0081619B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7D40B2F61F7D27AF0081619B /* Scene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Scene.sks; sourceTree = "<group>"; };
 		7D40B2F81F7D27AF0081619B /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
-		7D40B2FA1F7D27AF0081619B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		7D40B2FD1F7D27AF0081619B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7D40B2FF1F7D27AF0081619B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7D40B3021F7D27AF0081619B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7D40B3041F7D27AF0081619B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7D40B30A1F7D27E60081619B /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
+		7D40B30C1F7D27F10081619B /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
+		7D40B30F1F7D28000081619B /* ARAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARAnnotation.swift; sourceTree = "<group>"; };
+		7D40B3101F7D28000081619B /* ARPOIUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPOIUI.swift; sourceTree = "<group>"; };
+		7D40B3111F7D28000081619B /* CustomViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViews.swift; sourceTree = "<group>"; };
+		7D40B3131F7D28000081619B /* MatrixHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHelper.swift; sourceTree = "<group>"; };
+		7D40B3191F7D29F00081619B /* PlaceLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,15 +71,29 @@
 			isa = PBXGroup;
 			children = (
 				7D40B2F41F7D27AF0081619B /* AppDelegate.swift */,
+				7D40B30A1F7D27E60081619B /* ARViewController.swift */,
+				7D40B30C1F7D27F10081619B /* ContainerViewController.swift */,
 				7D40B2F61F7D27AF0081619B /* Scene.sks */,
 				7D40B2F81F7D27AF0081619B /* Scene.swift */,
-				7D40B2FA1F7D27AF0081619B /* ViewController.swift */,
 				7D40B2FC1F7D27AF0081619B /* Main.storyboard */,
 				7D40B2FF1F7D27AF0081619B /* Assets.xcassets */,
 				7D40B3011F7D27AF0081619B /* LaunchScreen.storyboard */,
 				7D40B3041F7D27AF0081619B /* Info.plist */,
+				7D40B30E1F7D28000081619B /* Supporting files */,
 			);
 			path = "AR-POI";
+			sourceTree = "<group>";
+		};
+		7D40B30E1F7D28000081619B /* Supporting files */ = {
+			isa = PBXGroup;
+			children = (
+				7D40B30F1F7D28000081619B /* ARAnnotation.swift */,
+				7D40B3101F7D28000081619B /* ARPOIUI.swift */,
+				7D40B3111F7D28000081619B /* CustomViews.swift */,
+				7D40B3131F7D28000081619B /* MatrixHelper.swift */,
+				7D40B3191F7D29F00081619B /* PlaceLoader.swift */,
+			);
+			path = "Supporting files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -143,9 +169,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7D40B2FB1F7D27AF0081619B /* ViewController.swift in Sources */,
+				7D40B3141F7D28080081619B /* ARAnnotation.swift in Sources */,
+				7D40B3151F7D280A0081619B /* ARPOIUI.swift in Sources */,
+				7D40B3181F7D28120081619B /* MatrixHelper.swift in Sources */,
+				7D40B31A1F7D29F00081619B /* PlaceLoader.swift in Sources */,
 				7D40B2F91F7D27AF0081619B /* Scene.swift in Sources */,
+				7D40B30D1F7D27F10081619B /* ContainerViewController.swift in Sources */,
+				7D40B3161F7D280D0081619B /* CustomViews.swift in Sources */,
 				7D40B2F51F7D27AF0081619B /* AppDelegate.swift in Sources */,
+				7D40B30B1F7D27E60081619B /* ARViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

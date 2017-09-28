@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  AR-POI
 //
-//  Created by Jamie Perkins on 9/28/17.
+//  Created by Jamie Perkins on 9/26/17.
 //  Copyright © 2017 Inorganik Produce, Inc. All rights reserved.
 //
 
@@ -39,6 +39,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    }
+    
+    // MARK: - Utility methods
+    
+    func activeViewController() -> UIViewController {
+        var topController = UIApplication.shared.keyWindow?.rootViewController
+        while topController?.presentedViewController != nil {
+            topController = topController?.presentedViewController
+        }
+        return topController!
+    }
+    
+    func alertWithTitle(_ title: String, message: String) {
+        let errorAlert = UIAlertController.init(title: title, message: message, preferredStyle: .alert)
+        errorAlert.addAction(UIAlertAction.init(title: "OK", style: .cancel, handler: nil))
+        activeViewController().present(errorAlert, animated: true, completion: nil)
     }
 
 
