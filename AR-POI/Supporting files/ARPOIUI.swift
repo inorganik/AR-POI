@@ -15,9 +15,19 @@ import UIKit
 
 public class ARPOIUI : NSObject {
 
+    //// Cache
+
+    private struct Cache {
+        static let locationBlue: UIColor = UIColor(red: 0.126, green: 0.582, blue: 1.000, alpha: 1.000)
+    }
+
+    //// Colors
+
+    @objc dynamic public class var locationBlue: UIColor { return Cache.locationBlue }
+
     //// Drawing Methods
 
-    @objc dynamic public class func drawTooltipLabel(frame: CGRect = CGRect(x: 0, y: 0, width: 240, height: 73), color: UIColor = UIColor(red: 0.126, green: 0.582, blue: 1.000, alpha: 1.000), distanceText: String = "62.4", distUnitsText: String = "miles") {
+    @objc dynamic public class func drawTooltipeLight(frame: CGRect = CGRect(x: 0, y: 0, width: 240, height: 73), color: UIColor = UIColor(red: 0.126, green: 0.582, blue: 1.000, alpha: 1.000), distanceText: String = "62.4", distUnitsText: String = "miles", titleText: String = "Title Label") {
         //// General Declarations
         let context = UIGraphicsGetCurrentContext()!
         // This non-generic function dramatically improves compilation times of complex expressions.
@@ -74,20 +84,19 @@ public class ARPOIUI : NSObject {
 
 
         //// title label Drawing
-        let titleLabelRect = CGRect(x: frame.minX + 11, y: frame.minY + 14, width: frame.width - 74, height: frame.height - 47)
-        let titleLabelTextContent = "Hello, World!"
+        let titleLabelRect = CGRect(x: frame.minX + 11, y: frame.minY + 14, width: frame.width - 79, height: frame.height - 47)
         let titleLabelStyle = NSMutableParagraphStyle()
-        titleLabelStyle.alignment = .left
+        titleLabelStyle.alignment = .center
         let titleLabelFontAttributes = [
             .font: UIFont.systemFont(ofSize: 23, weight: UIFont.Weight.medium),
             .foregroundColor: UIColor.black,
             .paragraphStyle: titleLabelStyle,
         ] as [NSAttributedStringKey: Any]
 
-        let titleLabelTextHeight: CGFloat = titleLabelTextContent.boundingRect(with: CGSize(width: titleLabelRect.width, height: CGFloat.infinity), options: .usesLineFragmentOrigin, attributes: titleLabelFontAttributes, context: nil).height
+        let titleLabelTextHeight: CGFloat = titleText.boundingRect(with: CGSize(width: titleLabelRect.width, height: CGFloat.infinity), options: .usesLineFragmentOrigin, attributes: titleLabelFontAttributes, context: nil).height
         context.saveGState()
         context.clip(to: titleLabelRect)
-        titleLabelTextContent.draw(in: CGRect(x: titleLabelRect.minX, y: titleLabelRect.minY + (titleLabelRect.height - titleLabelTextHeight) / 2, width: titleLabelRect.width, height: titleLabelTextHeight), withAttributes: titleLabelFontAttributes)
+        titleText.draw(in: CGRect(x: titleLabelRect.minX, y: titleLabelRect.minY + (titleLabelRect.height - titleLabelTextHeight) / 2, width: titleLabelRect.width, height: titleLabelTextHeight), withAttributes: titleLabelFontAttributes)
         context.restoreGState()
 
 
@@ -109,6 +118,235 @@ public class ARPOIUI : NSObject {
         colorBoxPath.addCurve(to: CGPoint(x: distanceGroup.minX + 51.63, y: distanceGroup.minY + 0.01501 * distanceGroup.height), controlPoint1: CGPoint(x: distanceGroup.minX + 47.03, y: distanceGroup.minY + 0.00000 * distanceGroup.height), controlPoint2: CGPoint(x: distanceGroup.minX + 49.45, y: distanceGroup.minY + 0.00000 * distanceGroup.height))
         colorBoxPath.close()
         color.setFill()
+        colorBoxPath.fill()
+
+
+        //// distance label Drawing
+        let distanceLabelRect = CGRect(x: distanceGroup.minX, y: distanceGroup.minY + fastFloor(distanceGroup.height * 0.00000 + 0.5), width: 59, height: fastFloor(distanceGroup.height * 0.83333 + 0.5) - fastFloor(distanceGroup.height * 0.00000 + 0.5))
+        let distanceLabelStyle = NSMutableParagraphStyle()
+        distanceLabelStyle.alignment = .center
+        let distanceLabelFontAttributes = [
+            .font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.medium),
+            .foregroundColor: UIColor.white,
+            .paragraphStyle: distanceLabelStyle,
+        ] as [NSAttributedStringKey: Any]
+
+        let distanceLabelTextHeight: CGFloat = distanceText.boundingRect(with: CGSize(width: distanceLabelRect.width, height: CGFloat.infinity), options: .usesLineFragmentOrigin, attributes: distanceLabelFontAttributes, context: nil).height
+        context.saveGState()
+        context.clip(to: distanceLabelRect)
+        distanceText.draw(in: CGRect(x: distanceLabelRect.minX, y: distanceLabelRect.minY + (distanceLabelRect.height - distanceLabelTextHeight) / 2, width: distanceLabelRect.width, height: distanceLabelTextHeight), withAttributes: distanceLabelFontAttributes)
+        context.restoreGState()
+
+
+        //// distance units Drawing
+        let distanceUnitsRect = CGRect(x: distanceGroup.minX, y: distanceGroup.minY + fastFloor(distanceGroup.height * 0.50000 + 0.5), width: 59, height: fastFloor(distanceGroup.height * 1.00000 + 0.5) - fastFloor(distanceGroup.height * 0.50000 + 0.5))
+        let distanceUnitsStyle = NSMutableParagraphStyle()
+        distanceUnitsStyle.alignment = .center
+        let distanceUnitsFontAttributes = [
+            .font: UIFont.systemFont(ofSize: 10, weight: UIFont.Weight.medium),
+            .foregroundColor: UIColor.white,
+            .paragraphStyle: distanceUnitsStyle,
+        ] as [NSAttributedStringKey: Any]
+
+        let distanceUnitsTextHeight: CGFloat = distUnitsText.boundingRect(with: CGSize(width: distanceUnitsRect.width, height: CGFloat.infinity), options: .usesLineFragmentOrigin, attributes: distanceUnitsFontAttributes, context: nil).height
+        context.saveGState()
+        context.clip(to: distanceUnitsRect)
+        distUnitsText.draw(in: CGRect(x: distanceUnitsRect.minX, y: distanceUnitsRect.minY + (distanceUnitsRect.height - distanceUnitsTextHeight) / 2, width: distanceUnitsRect.width, height: distanceUnitsTextHeight), withAttributes: distanceUnitsFontAttributes)
+        context.restoreGState()
+    }
+
+    @objc dynamic public class func drawIconRefresh(frame: CGRect = CGRect(x: 0, y: 0, width: 40, height: 40), color: UIColor = UIColor(red: 0.126, green: 0.582, blue: 1.000, alpha: 1.000)) {
+
+        //// Bezier Drawing
+        let bezierPath = UIBezierPath()
+        bezierPath.move(to: CGPoint(x: frame.minX + 35.8, y: frame.minY + 9.01))
+        bezierPath.addLine(to: CGPoint(x: frame.minX + 35.8, y: frame.minY + 2.1))
+        bezierPath.addLine(to: CGPoint(x: frame.minX + 35.81, y: frame.minY + 2))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 35.82, y: frame.minY + 1.8), controlPoint1: CGPoint(x: frame.minX + 35.81, y: frame.minY + 1.91), controlPoint2: CGPoint(x: frame.minX + 35.81, y: frame.minY + 1.89))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 35.95, y: frame.minY + 1.32), controlPoint1: CGPoint(x: frame.minX + 35.85, y: frame.minY + 1.64), controlPoint2: CGPoint(x: frame.minX + 35.89, y: frame.minY + 1.48))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 36.45, y: frame.minY + 0.58), controlPoint1: CGPoint(x: frame.minX + 36.06, y: frame.minY + 1.04), controlPoint2: CGPoint(x: frame.minX + 36.24, y: frame.minY + 0.79))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 37.22, y: frame.minY + 0.12), controlPoint1: CGPoint(x: frame.minX + 36.67, y: frame.minY + 0.37), controlPoint2: CGPoint(x: frame.minX + 36.93, y: frame.minY + 0.21))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 37.7, y: frame.minY + 0.01), controlPoint1: CGPoint(x: frame.minX + 37.37, y: frame.minY + 0.06), controlPoint2: CGPoint(x: frame.minX + 37.54, y: frame.minY + 0.03))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 37.9, y: frame.minY), controlPoint1: CGPoint(x: frame.minX + 37.79, y: frame.minY), controlPoint2: CGPoint(x: frame.minX + 37.81, y: frame.minY + 0))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 38, y: frame.minY + 0), controlPoint1: CGPoint(x: frame.minX + 37.93, y: frame.minY), controlPoint2: CGPoint(x: frame.minX + 37.97, y: frame.minY + 0))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 38.2, y: frame.minY + 0.02), controlPoint1: CGPoint(x: frame.minX + 38.09, y: frame.minY + 0.01), controlPoint2: CGPoint(x: frame.minX + 38.11, y: frame.minY + 0.01))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 38.68, y: frame.minY + 0.15), controlPoint1: CGPoint(x: frame.minX + 38.36, y: frame.minY + 0.05), controlPoint2: CGPoint(x: frame.minX + 38.53, y: frame.minY + 0.09))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 39.42, y: frame.minY + 0.65), controlPoint1: CGPoint(x: frame.minX + 38.96, y: frame.minY + 0.26), controlPoint2: CGPoint(x: frame.minX + 39.21, y: frame.minY + 0.43))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 39.88, y: frame.minY + 1.42), controlPoint1: CGPoint(x: frame.minX + 39.63, y: frame.minY + 0.87), controlPoint2: CGPoint(x: frame.minX + 39.79, y: frame.minY + 1.13))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 39.99, y: frame.minY + 1.9), controlPoint1: CGPoint(x: frame.minX + 39.94, y: frame.minY + 1.57), controlPoint2: CGPoint(x: frame.minX + 39.97, y: frame.minY + 1.74))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 40, y: frame.minY + 2.1), controlPoint1: CGPoint(x: frame.minX + 40, y: frame.minY + 1.99), controlPoint2: CGPoint(x: frame.minX + 40, y: frame.minY + 2.01))
+        bezierPath.addLine(to: CGPoint(x: frame.minX + 40, y: frame.minY + 14.32))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 39.99, y: frame.minY + 14.52), controlPoint1: CGPoint(x: frame.minX + 40, y: frame.minY + 14.41), controlPoint2: CGPoint(x: frame.minX + 40, y: frame.minY + 14.43))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 39.88, y: frame.minY + 15.01), controlPoint1: CGPoint(x: frame.minX + 39.97, y: frame.minY + 14.68), controlPoint2: CGPoint(x: frame.minX + 39.94, y: frame.minY + 14.85))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 39.42, y: frame.minY + 15.77), controlPoint1: CGPoint(x: frame.minX + 39.79, y: frame.minY + 15.29), controlPoint2: CGPoint(x: frame.minX + 39.63, y: frame.minY + 15.55))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 38.59, y: frame.minY + 16.31), controlPoint1: CGPoint(x: frame.minX + 39.19, y: frame.minY + 16.01), controlPoint2: CGPoint(x: frame.minX + 38.9, y: frame.minY + 16.2))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 38.1, y: frame.minY + 16.41), controlPoint1: CGPoint(x: frame.minX + 38.43, y: frame.minY + 16.36), controlPoint2: CGPoint(x: frame.minX + 38.27, y: frame.minY + 16.4))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 37.9, y: frame.minY + 16.42), controlPoint1: CGPoint(x: frame.minX + 38.01, y: frame.minY + 16.42), controlPoint2: CGPoint(x: frame.minX + 37.99, y: frame.minY + 16.42))
+        bezierPath.addLine(to: CGPoint(x: frame.minX + 25.72, y: frame.minY + 16.42))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 25.62, y: frame.minY + 16.42), controlPoint1: CGPoint(x: frame.minX + 25.68, y: frame.minY + 16.42), controlPoint2: CGPoint(x: frame.minX + 25.65, y: frame.minY + 16.42))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 25.42, y: frame.minY + 16.4), controlPoint1: CGPoint(x: frame.minX + 25.55, y: frame.minY + 16.42), controlPoint2: CGPoint(x: frame.minX + 25.48, y: frame.minY + 16.41))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 24.67, y: frame.minY + 16.14), controlPoint1: CGPoint(x: frame.minX + 25.15, y: frame.minY + 16.36), controlPoint2: CGPoint(x: frame.minX + 24.9, y: frame.minY + 16.27))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 24.2, y: frame.minY + 15.77), controlPoint1: CGPoint(x: frame.minX + 24.49, y: frame.minY + 16.04), controlPoint2: CGPoint(x: frame.minX + 24.33, y: frame.minY + 15.91))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 23.85, y: frame.minY + 15.28), controlPoint1: CGPoint(x: frame.minX + 24.06, y: frame.minY + 15.62), controlPoint2: CGPoint(x: frame.minX + 23.94, y: frame.minY + 15.46))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 23.62, y: frame.minY + 14.42), controlPoint1: CGPoint(x: frame.minX + 23.71, y: frame.minY + 15.01), controlPoint2: CGPoint(x: frame.minX + 23.63, y: frame.minY + 14.72))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 23.77, y: frame.minY + 13.54), controlPoint1: CGPoint(x: frame.minX + 23.61, y: frame.minY + 14.12), controlPoint2: CGPoint(x: frame.minX + 23.66, y: frame.minY + 13.81))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 24.2, y: frame.minY + 12.87), controlPoint1: CGPoint(x: frame.minX + 23.87, y: frame.minY + 13.29), controlPoint2: CGPoint(x: frame.minX + 24.01, y: frame.minY + 13.06))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 24.84, y: frame.minY + 12.4), controlPoint1: CGPoint(x: frame.minX + 24.38, y: frame.minY + 12.67), controlPoint2: CGPoint(x: frame.minX + 24.6, y: frame.minY + 12.51))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 25.42, y: frame.minY + 12.24), controlPoint1: CGPoint(x: frame.minX + 25.03, y: frame.minY + 12.32), controlPoint2: CGPoint(x: frame.minX + 25.22, y: frame.minY + 12.26))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 25.62, y: frame.minY + 12.22), controlPoint1: CGPoint(x: frame.minX + 25.48, y: frame.minY + 12.23), controlPoint2: CGPoint(x: frame.minX + 25.55, y: frame.minY + 12.22))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 25.72, y: frame.minY + 12.21), controlPoint1: CGPoint(x: frame.minX + 25.65, y: frame.minY + 12.21), controlPoint2: CGPoint(x: frame.minX + 25.68, y: frame.minY + 12.21))
+        bezierPath.addLine(to: CGPoint(x: frame.minX + 32.88, y: frame.minY + 12.21))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 31.01, y: frame.minY + 9.74), controlPoint1: CGPoint(x: frame.minX + 32.34, y: frame.minY + 11.33), controlPoint2: CGPoint(x: frame.minX + 31.71, y: frame.minY + 10.5))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 28.87, y: frame.minY + 7.82), controlPoint1: CGPoint(x: frame.minX + 30.35, y: frame.minY + 9.03), controlPoint2: CGPoint(x: frame.minX + 29.64, y: frame.minY + 8.39))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 26.15, y: frame.minY + 6.2), controlPoint1: CGPoint(x: frame.minX + 28.02, y: frame.minY + 7.19), controlPoint2: CGPoint(x: frame.minX + 27.11, y: frame.minY + 6.65))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 22.47, y: frame.minY + 5.03), controlPoint1: CGPoint(x: frame.minX + 24.98, y: frame.minY + 5.66), controlPoint2: CGPoint(x: frame.minX + 23.74, y: frame.minY + 5.26))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 17.31, y: frame.minY + 4.96), controlPoint1: CGPoint(x: frame.minX + 20.77, y: frame.minY + 4.72), controlPoint2: CGPoint(x: frame.minX + 19.02, y: frame.minY + 4.7))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 14.71, y: frame.minY + 5.59), controlPoint1: CGPoint(x: frame.minX + 16.43, y: frame.minY + 5.09), controlPoint2: CGPoint(x: frame.minX + 15.56, y: frame.minY + 5.31))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 10.12, y: frame.minY + 8.09), controlPoint1: CGPoint(x: frame.minX + 13.05, y: frame.minY + 6.16), controlPoint2: CGPoint(x: frame.minX + 11.5, y: frame.minY + 7))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 6.29, y: frame.minY + 12.49), controlPoint1: CGPoint(x: frame.minX + 8.58, y: frame.minY + 9.3), controlPoint2: CGPoint(x: frame.minX + 7.28, y: frame.minY + 10.8))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 4.98, y: frame.minY + 15.4), controlPoint1: CGPoint(x: frame.minX + 5.76, y: frame.minY + 13.41), controlPoint2: CGPoint(x: frame.minX + 5.32, y: frame.minY + 14.39))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 4.33, y: frame.minY + 18.21), controlPoint1: CGPoint(x: frame.minX + 4.68, y: frame.minY + 16.32), controlPoint2: CGPoint(x: frame.minX + 4.46, y: frame.minY + 17.26))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 4.73, y: frame.minY + 24.35), controlPoint1: CGPoint(x: frame.minX + 4.06, y: frame.minY + 20.26), controlPoint2: CGPoint(x: frame.minX + 4.2, y: frame.minY + 22.35))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 5.68, y: frame.minY + 26.92), controlPoint1: CGPoint(x: frame.minX + 4.97, y: frame.minY + 25.23), controlPoint2: CGPoint(x: frame.minX + 5.29, y: frame.minY + 26.09))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 7.27, y: frame.minY + 29.56), controlPoint1: CGPoint(x: frame.minX + 6.12, y: frame.minY + 27.85), controlPoint2: CGPoint(x: frame.minX + 6.66, y: frame.minY + 28.74))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 11.33, y: frame.minY + 33.35), controlPoint1: CGPoint(x: frame.minX + 8.39, y: frame.minY + 31.05), controlPoint2: CGPoint(x: frame.minX + 9.77, y: frame.minY + 32.34))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 15.53, y: frame.minY + 35.23), controlPoint1: CGPoint(x: frame.minX + 12.63, y: frame.minY + 34.18), controlPoint2: CGPoint(x: frame.minX + 14.05, y: frame.minY + 34.82))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 23.51, y: frame.minY + 35.31), controlPoint1: CGPoint(x: frame.minX + 18.12, y: frame.minY + 35.95), controlPoint2: CGPoint(x: frame.minX + 20.9, y: frame.minY + 35.98))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 27.92, y: frame.minY + 33.4), controlPoint1: CGPoint(x: frame.minX + 25.07, y: frame.minY + 34.91), controlPoint2: CGPoint(x: frame.minX + 26.56, y: frame.minY + 34.26))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 30.56, y: frame.minY + 31.29), controlPoint1: CGPoint(x: frame.minX + 28.87, y: frame.minY + 32.8), controlPoint2: CGPoint(x: frame.minX + 29.76, y: frame.minY + 32.09))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 31.66, y: frame.minY + 30.08), controlPoint1: CGPoint(x: frame.minX + 30.95, y: frame.minY + 30.91), controlPoint2: CGPoint(x: frame.minX + 31.32, y: frame.minY + 30.5))
+        bezierPath.addLine(to: CGPoint(x: frame.minX + 31.7, y: frame.minY + 30.04))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 31.93, y: frame.minY + 29.79), controlPoint1: CGPoint(x: frame.minX + 31.8, y: frame.minY + 29.92), controlPoint2: CGPoint(x: frame.minX + 31.82, y: frame.minY + 29.89))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 32.98, y: frame.minY + 29.29), controlPoint1: CGPoint(x: frame.minX + 32.23, y: frame.minY + 29.53), controlPoint2: CGPoint(x: frame.minX + 32.59, y: frame.minY + 29.35))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 33.66, y: frame.minY + 29.29), controlPoint1: CGPoint(x: frame.minX + 33.21, y: frame.minY + 29.25), controlPoint2: CGPoint(x: frame.minX + 33.43, y: frame.minY + 29.25))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 34.58, y: frame.minY + 29.68), controlPoint1: CGPoint(x: frame.minX + 33.99, y: frame.minY + 29.34), controlPoint2: CGPoint(x: frame.minX + 34.31, y: frame.minY + 29.47))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 35.14, y: frame.minY + 30.31), controlPoint1: CGPoint(x: frame.minX + 34.81, y: frame.minY + 29.85), controlPoint2: CGPoint(x: frame.minX + 35, y: frame.minY + 30.06))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 35.38, y: frame.minY + 30.94), controlPoint1: CGPoint(x: frame.minX + 35.25, y: frame.minY + 30.5), controlPoint2: CGPoint(x: frame.minX + 35.33, y: frame.minY + 30.72))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 35.41, y: frame.minY + 31.61), controlPoint1: CGPoint(x: frame.minX + 35.43, y: frame.minY + 31.16), controlPoint2: CGPoint(x: frame.minX + 35.44, y: frame.minY + 31.39))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 35.14, y: frame.minY + 32.41), controlPoint1: CGPoint(x: frame.minX + 35.38, y: frame.minY + 31.89), controlPoint2: CGPoint(x: frame.minX + 35.29, y: frame.minY + 32.17))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 35.05, y: frame.minY + 32.55), controlPoint1: CGPoint(x: frame.minX + 35.12, y: frame.minY + 32.46), controlPoint2: CGPoint(x: frame.minX + 35.09, y: frame.minY + 32.51))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 34.87, y: frame.minY + 32.79), controlPoint1: CGPoint(x: frame.minX + 35, y: frame.minY + 32.64), controlPoint2: CGPoint(x: frame.minX + 34.93, y: frame.minY + 32.71))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 34.66, y: frame.minY + 33.05), controlPoint1: CGPoint(x: frame.minX + 34.8, y: frame.minY + 32.88), controlPoint2: CGPoint(x: frame.minX + 34.73, y: frame.minY + 32.96))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 33.61, y: frame.minY + 34.19), controlPoint1: CGPoint(x: frame.minX + 34.32, y: frame.minY + 33.44), controlPoint2: CGPoint(x: frame.minX + 33.97, y: frame.minY + 33.82))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 30.16, y: frame.minY + 36.96), controlPoint1: CGPoint(x: frame.minX + 32.57, y: frame.minY + 35.24), controlPoint2: CGPoint(x: frame.minX + 31.41, y: frame.minY + 36.17))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 26.59, y: frame.minY + 38.74), controlPoint1: CGPoint(x: frame.minX + 29.04, y: frame.minY + 37.67), controlPoint2: CGPoint(x: frame.minX + 27.84, y: frame.minY + 38.27))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 22.58, y: frame.minY + 39.79), controlPoint1: CGPoint(x: frame.minX + 25.29, y: frame.minY + 39.23), controlPoint2: CGPoint(x: frame.minX + 23.94, y: frame.minY + 39.58))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 15.23, y: frame.minY + 39.49), controlPoint1: CGPoint(x: frame.minX + 20.14, y: frame.minY + 40.15), controlPoint2: CGPoint(x: frame.minX + 17.63, y: frame.minY + 40.05))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 10.5, y: frame.minY + 37.73), controlPoint1: CGPoint(x: frame.minX + 13.59, y: frame.minY + 39.11), controlPoint2: CGPoint(x: frame.minX + 12, y: frame.minY + 38.52))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 4.95, y: frame.minY + 33.36), controlPoint1: CGPoint(x: frame.minX + 8.41, y: frame.minY + 36.62), controlPoint2: CGPoint(x: frame.minX + 6.52, y: frame.minY + 35.14))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 1.84, y: frame.minY + 28.62), controlPoint1: CGPoint(x: frame.minX + 3.7, y: frame.minY + 31.94), controlPoint2: CGPoint(x: frame.minX + 2.64, y: frame.minY + 30.34))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 0.43, y: frame.minY + 24.38), controlPoint1: CGPoint(x: frame.minX + 1.21, y: frame.minY + 27.26), controlPoint2: CGPoint(x: frame.minX + 0.73, y: frame.minY + 25.84))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 0.17, y: frame.minY + 17.66), controlPoint1: CGPoint(x: frame.minX - 0.04, y: frame.minY + 22.17), controlPoint2: CGPoint(x: frame.minX - 0.12, y: frame.minY + 19.89))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 0.78, y: frame.minY + 14.77), controlPoint1: CGPoint(x: frame.minX + 0.3, y: frame.minY + 16.68), controlPoint2: CGPoint(x: frame.minX + 0.51, y: frame.minY + 15.72))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 2.49, y: frame.minY + 10.68), controlPoint1: CGPoint(x: frame.minX + 1.19, y: frame.minY + 13.35), controlPoint2: CGPoint(x: frame.minX + 1.77, y: frame.minY + 11.98))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 6.36, y: frame.minY + 5.78), controlPoint1: CGPoint(x: frame.minX + 3.51, y: frame.minY + 8.85), controlPoint2: CGPoint(x: frame.minX + 4.82, y: frame.minY + 7.19))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 9.17, y: frame.minY + 3.62), controlPoint1: CGPoint(x: frame.minX + 7.23, y: frame.minY + 4.97), controlPoint2: CGPoint(x: frame.minX + 8.17, y: frame.minY + 4.25))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 12.13, y: frame.minY + 2.08), controlPoint1: CGPoint(x: frame.minX + 10.11, y: frame.minY + 3.02), controlPoint2: CGPoint(x: frame.minX + 11.1, y: frame.minY + 2.5))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 16.56, y: frame.minY + 0.82), controlPoint1: CGPoint(x: frame.minX + 13.55, y: frame.minY + 1.48), controlPoint2: CGPoint(x: frame.minX + 15.04, y: frame.minY + 1.06))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 18.53, y: frame.minY + 0.6), controlPoint1: CGPoint(x: frame.minX + 17.21, y: frame.minY + 0.71), controlPoint2: CGPoint(x: frame.minX + 17.87, y: frame.minY + 0.64))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 19.54, y: frame.minY + 0.57), controlPoint1: CGPoint(x: frame.minX + 18.87, y: frame.minY + 0.58), controlPoint2: CGPoint(x: frame.minX + 19.21, y: frame.minY + 0.57))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 19.76, y: frame.minY + 0.57), controlPoint1: CGPoint(x: frame.minX + 19.62, y: frame.minY + 0.57), controlPoint2: CGPoint(x: frame.minX + 19.69, y: frame.minY + 0.57))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 20.43, y: frame.minY + 0.59), controlPoint1: CGPoint(x: frame.minX + 19.99, y: frame.minY + 0.57), controlPoint2: CGPoint(x: frame.minX + 20.21, y: frame.minY + 0.58))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 21.75, y: frame.minY + 0.68), controlPoint1: CGPoint(x: frame.minX + 20.87, y: frame.minY + 0.6), controlPoint2: CGPoint(x: frame.minX + 21.31, y: frame.minY + 0.63))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 25.54, y: frame.minY + 1.47), controlPoint1: CGPoint(x: frame.minX + 23.04, y: frame.minY + 0.82), controlPoint2: CGPoint(x: frame.minX + 24.31, y: frame.minY + 1.08))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 30.64, y: frame.minY + 3.92), controlPoint1: CGPoint(x: frame.minX + 27.35, y: frame.minY + 2.03), controlPoint2: CGPoint(x: frame.minX + 29.07, y: frame.minY + 2.86))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 35.12, y: frame.minY + 8.09), controlPoint1: CGPoint(x: frame.minX + 32.34, y: frame.minY + 5.07), controlPoint2: CGPoint(x: frame.minX + 33.85, y: frame.minY + 6.48))
+        bezierPath.addCurve(to: CGPoint(x: frame.minX + 35.8, y: frame.minY + 9.01), controlPoint1: CGPoint(x: frame.minX + 35.36, y: frame.minY + 8.39), controlPoint2: CGPoint(x: frame.minX + 35.58, y: frame.minY + 8.7))
+        bezierPath.close()
+        bezierPath.usesEvenOddFillRule = true
+        color.setFill()
+        bezierPath.fill()
+    }
+
+    @objc dynamic public class func drawTooltipDark(frame: CGRect = CGRect(x: 0, y: 0, width: 240, height: 73), distanceText: String = "62.4", distUnitsText: String = "miles", titleText: String = "Title Label") {
+        //// General Declarations
+        let context = UIGraphicsGetCurrentContext()!
+        // This non-generic function dramatically improves compilation times of complex expressions.
+        func fastFloor(_ x: CGFloat) -> CGFloat { return floor(x) }
+
+
+        //// Shadow Declarations
+        let shadow = NSShadow()
+        shadow.shadowColor = UIColor.black.withAlphaComponent(0.47)
+        shadow.shadowOffset = CGSize(width: 0, height: 1)
+        shadow.shadowBlurRadius = 5
+
+
+        //// Subframes
+        let distanceGroup: CGRect = CGRect(x: frame.minX + frame.width - 63, y: frame.minY + fastFloor((frame.height - 22) * 0.05882 - 0.5) + 1, width: 59, height: frame.height - 23 - fastFloor((frame.height - 22) * 0.05882 - 0.5))
+        let arrowFrame = CGRect(x: frame.minX + fastFloor((frame.width - 40) * 0.50000 + 0.5), y: frame.minY + frame.height - 33, width: 40, height: 33)
+
+
+        //// tooltip Drawing
+        let tooltipPath = UIBezierPath()
+        tooltipPath.move(to: CGPoint(x: frame.maxX - 11.37, y: frame.minY + 3.72))
+        tooltipPath.addLine(to: CGPoint(x: frame.maxX - 10.95, y: frame.minY + 3.82))
+        tooltipPath.addCurve(to: CGPoint(x: frame.maxX - 4.82, y: frame.minY + 9.95), controlPoint1: CGPoint(x: frame.maxX - 8.1, y: frame.minY + 4.86), controlPoint2: CGPoint(x: frame.maxX - 5.86, y: frame.minY + 7.1))
+        tooltipPath.addCurve(to: CGPoint(x: frame.maxX - 4, y: frame.minY + 19.82), controlPoint1: CGPoint(x: frame.maxX - 4, y: frame.minY + 12.55), controlPoint2: CGPoint(x: frame.maxX - 4, y: frame.minY + 14.97))
+        tooltipPath.addLine(to: CGPoint(x: frame.maxX - 4, y: frame.maxY - 38.82))
+        tooltipPath.addCurve(to: CGPoint(x: frame.maxX - 4.72, y: frame.maxY - 29.37), controlPoint1: CGPoint(x: frame.maxX - 4, y: frame.maxY - 33.97), controlPoint2: CGPoint(x: frame.maxX - 4, y: frame.maxY - 31.55))
+        tooltipPath.addLine(to: CGPoint(x: frame.maxX - 4.82, y: frame.maxY - 28.95))
+        tooltipPath.addCurve(to: CGPoint(x: frame.maxX - 10.95, y: frame.maxY - 22.82), controlPoint1: CGPoint(x: frame.maxX - 5.86, y: frame.maxY - 26.1), controlPoint2: CGPoint(x: frame.maxX - 8.1, y: frame.maxY - 23.86))
+        tooltipPath.addCurve(to: CGPoint(x: frame.maxX - 20.82, y: frame.maxY - 22), controlPoint1: CGPoint(x: frame.maxX - 13.55, y: frame.maxY - 22), controlPoint2: CGPoint(x: frame.maxX - 15.97, y: frame.maxY - 22))
+        tooltipPath.addLine(to: CGPoint(x: arrowFrame.maxX - 1.62, y: arrowFrame.maxY - 22))
+        tooltipPath.addCurve(to: CGPoint(x: arrowFrame.maxX - 19.62, y: arrowFrame.maxY - 4), controlPoint1: CGPoint(x: arrowFrame.maxX - 4.26, y: arrowFrame.maxY - 19.36), controlPoint2: CGPoint(x: arrowFrame.maxX - 19.62, y: arrowFrame.maxY - 4))
+        tooltipPath.addCurve(to: CGPoint(x: arrowFrame.minX + 2, y: arrowFrame.maxY - 22), controlPoint1: CGPoint(x: arrowFrame.maxX - 19.62, y: arrowFrame.maxY - 4), controlPoint2: CGPoint(x: arrowFrame.minX + 4.64, y: arrowFrame.maxY - 19.36))
+        tooltipPath.addLine(to: CGPoint(x: frame.minX + 21.82, y: frame.maxY - 22))
+        tooltipPath.addCurve(to: CGPoint(x: frame.minX + 12.37, y: frame.maxY - 22.72), controlPoint1: CGPoint(x: frame.minX + 16.97, y: frame.maxY - 22), controlPoint2: CGPoint(x: frame.minX + 14.55, y: frame.maxY - 22))
+        tooltipPath.addLine(to: CGPoint(x: frame.minX + 11.95, y: frame.maxY - 22.82))
+        tooltipPath.addCurve(to: CGPoint(x: frame.minX + 5.82, y: frame.maxY - 28.95), controlPoint1: CGPoint(x: frame.minX + 9.1, y: frame.maxY - 23.86), controlPoint2: CGPoint(x: frame.minX + 6.86, y: frame.maxY - 26.1))
+        tooltipPath.addCurve(to: CGPoint(x: frame.minX + 5, y: frame.maxY - 38.82), controlPoint1: CGPoint(x: frame.minX + 5, y: frame.maxY - 31.55), controlPoint2: CGPoint(x: frame.minX + 5, y: frame.maxY - 33.97))
+        tooltipPath.addLine(to: CGPoint(x: frame.minX + 5, y: frame.minY + 19.82))
+        tooltipPath.addCurve(to: CGPoint(x: frame.minX + 5.72, y: frame.minY + 10.37), controlPoint1: CGPoint(x: frame.minX + 5, y: frame.minY + 14.97), controlPoint2: CGPoint(x: frame.minX + 5, y: frame.minY + 12.55))
+        tooltipPath.addLine(to: CGPoint(x: frame.minX + 5.82, y: frame.minY + 9.95))
+        tooltipPath.addCurve(to: CGPoint(x: frame.minX + 11.95, y: frame.minY + 3.82), controlPoint1: CGPoint(x: frame.minX + 6.86, y: frame.minY + 7.1), controlPoint2: CGPoint(x: frame.minX + 9.1, y: frame.minY + 4.86))
+        tooltipPath.addCurve(to: CGPoint(x: frame.minX + 21.82, y: frame.minY + 3), controlPoint1: CGPoint(x: frame.minX + 14.55, y: frame.minY + 3), controlPoint2: CGPoint(x: frame.minX + 16.97, y: frame.minY + 3))
+        tooltipPath.addLine(to: CGPoint(x: frame.maxX - 20.82, y: frame.minY + 3))
+        tooltipPath.addCurve(to: CGPoint(x: frame.maxX - 11.37, y: frame.minY + 3.72), controlPoint1: CGPoint(x: frame.maxX - 15.97, y: frame.minY + 3), controlPoint2: CGPoint(x: frame.maxX - 13.55, y: frame.minY + 3))
+        tooltipPath.close()
+        context.saveGState()
+        context.setShadow(offset: shadow.shadowOffset, blur: shadow.shadowBlurRadius, color: (shadow.shadowColor as! UIColor).cgColor)
+        UIColor.black.setFill()
+        tooltipPath.fill()
+        context.restoreGState()
+
+
+
+        //// title label Drawing
+        let titleLabelRect = CGRect(x: frame.minX + 11, y: frame.minY + 14, width: frame.width - 79, height: frame.height - 47)
+        let titleLabelStyle = NSMutableParagraphStyle()
+        titleLabelStyle.alignment = .center
+        let titleLabelFontAttributes = [
+            .font: UIFont.systemFont(ofSize: 23, weight: UIFont.Weight.medium),
+            .foregroundColor: UIColor.white,
+            .paragraphStyle: titleLabelStyle,
+        ] as [NSAttributedStringKey: Any]
+
+        let titleLabelTextHeight: CGFloat = titleText.boundingRect(with: CGSize(width: titleLabelRect.width, height: CGFloat.infinity), options: .usesLineFragmentOrigin, attributes: titleLabelFontAttributes, context: nil).height
+        context.saveGState()
+        context.clip(to: titleLabelRect)
+        titleText.draw(in: CGRect(x: titleLabelRect.minX, y: titleLabelRect.minY + (titleLabelRect.height - titleLabelTextHeight) / 2, width: titleLabelRect.width, height: titleLabelTextHeight), withAttributes: titleLabelFontAttributes)
+        context.restoreGState()
+
+
+        //// distance group
+        //// color box Drawing
+        let colorBoxPath = UIBezierPath()
+        colorBoxPath.move(to: CGPoint(x: distanceGroup.minX + 51.63, y: distanceGroup.minY + 0.01501 * distanceGroup.height))
+        colorBoxPath.addLine(to: CGPoint(x: distanceGroup.minX + 52.05, y: distanceGroup.minY + 0.01717 * distanceGroup.height))
+        colorBoxPath.addCurve(to: CGPoint(x: distanceGroup.minX + 58.18, y: distanceGroup.minY + 0.14472 * distanceGroup.height), controlPoint1: CGPoint(x: distanceGroup.minX + 54.9, y: distanceGroup.minY + 0.03874 * distanceGroup.height), controlPoint2: CGPoint(x: distanceGroup.minX + 57.14, y: distanceGroup.minY + 0.08544 * distanceGroup.height))
+        colorBoxPath.addCurve(to: CGPoint(x: distanceGroup.minX + 59, y: distanceGroup.minY + 0.35032 * distanceGroup.height), controlPoint1: CGPoint(x: distanceGroup.minX + 59, y: distanceGroup.minY + 0.19901 * distanceGroup.height), controlPoint2: CGPoint(x: distanceGroup.minX + 59, y: distanceGroup.minY + 0.24945 * distanceGroup.height))
+        colorBoxPath.addLine(to: CGPoint(x: distanceGroup.minX + 59, y: distanceGroup.minY + 0.64968 * distanceGroup.height))
+        colorBoxPath.addCurve(to: CGPoint(x: distanceGroup.minX + 58.28, y: distanceGroup.minY + 0.84647 * distanceGroup.height), controlPoint1: CGPoint(x: distanceGroup.minX + 59, y: distanceGroup.minY + 0.75055 * distanceGroup.height), controlPoint2: CGPoint(x: distanceGroup.minX + 59, y: distanceGroup.minY + 0.80099 * distanceGroup.height))
+        colorBoxPath.addLine(to: CGPoint(x: distanceGroup.minX + 58.18, y: distanceGroup.minY + 0.85528 * distanceGroup.height))
+        colorBoxPath.addCurve(to: CGPoint(x: distanceGroup.minX + 52.05, y: distanceGroup.minY + 0.98283 * distanceGroup.height), controlPoint1: CGPoint(x: distanceGroup.minX + 57.14, y: distanceGroup.minY + 0.91456 * distanceGroup.height), controlPoint2: CGPoint(x: distanceGroup.minX + 54.9, y: distanceGroup.minY + 0.96126 * distanceGroup.height))
+        colorBoxPath.addCurve(to: CGPoint(x: distanceGroup.minX + 42.18, y: distanceGroup.minY + 1.00000 * distanceGroup.height), controlPoint1: CGPoint(x: distanceGroup.minX + 49.45, y: distanceGroup.minY + 1.00000 * distanceGroup.height), controlPoint2: CGPoint(x: distanceGroup.minX + 47.03, y: distanceGroup.minY + 1.00000 * distanceGroup.height))
+        colorBoxPath.addLine(to: CGPoint(x: distanceGroup.minX, y: distanceGroup.minY + 1.00000 * distanceGroup.height))
+        colorBoxPath.addCurve(to: CGPoint(x: distanceGroup.minX, y: distanceGroup.minY + 0.00000 * distanceGroup.height), controlPoint1: CGPoint(x: distanceGroup.minX, y: distanceGroup.minY + 0.73513 * distanceGroup.height), controlPoint2: CGPoint(x: distanceGroup.minX, y: distanceGroup.minY + 0.18528 * distanceGroup.height))
+        colorBoxPath.addLine(to: CGPoint(x: distanceGroup.minX + 42.18, y: distanceGroup.minY + 0.00000 * distanceGroup.height))
+        colorBoxPath.addCurve(to: CGPoint(x: distanceGroup.minX + 51.63, y: distanceGroup.minY + 0.01501 * distanceGroup.height), controlPoint1: CGPoint(x: distanceGroup.minX + 47.03, y: distanceGroup.minY + 0.00000 * distanceGroup.height), controlPoint2: CGPoint(x: distanceGroup.minX + 49.45, y: distanceGroup.minY + 0.00000 * distanceGroup.height))
+        colorBoxPath.close()
+        UIColor.darkGray.setFill()
         colorBoxPath.fill()
 
 

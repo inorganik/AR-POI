@@ -21,7 +21,9 @@ struct MatrixHelper {
 	
     // degrees - 0: straight ahead. positive: to the left. negative: to the right
     static func rotateMatrixAroundY(degrees: Float, matrix: simd_float4x4) -> simd_float4x4 {
+        
         let radians = GLKMathDegreesToRadians(degrees)
+        //let rotationMatrix = GLKMatrix4RotateY(GLKMatrix4Identity, radians)
         let rotationMatrix = GLKMatrix4MakeYRotation(radians)
         return simd_mul(convertGLKMatrix4Tosimd_float4x4(rotationMatrix), matrix)
     }

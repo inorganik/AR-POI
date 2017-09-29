@@ -16,7 +16,11 @@ class ARViewController: UIViewController, ARSKViewDelegate {
     @IBOutlet var sceneView: ARSKView!
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    var annotations = [[String: Any]]()
+    var annotations = [ARAnnotation]()
+    
+    // set anchor distances (m) for nearest and farthest
+    let anchorNearest: Float = 1
+    let anchorFarthest: Float = 5
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,39 +54,68 @@ class ARViewController: UIViewController, ARSKViewDelegate {
         sceneView.session.run(config)
     }
     
-    // MARK: - Items
+    // MARK: - POIs
     
     func getAndDisplayItemsAroundLocation(_ location: CLLocation, completion: @escaping () -> Void) {
         
         let loader = PlaceLoader()
-        loader.getItemsFor(location: location) { (resultItems, errMsg) in
+        let anchorSpread = anchorFarthest - anchorNearest
+        loader.getPOIsFor(location: location) { (resultPOIs, errMsg) in
             if let err = errMsg {
                 self.appDelegate.alertWithTitle("Error", message: err)
                 completion()
             }
-            else if let items = resultItems {
-                let originTransform = matrix_identity_float4x4
-                for item in items {
-                    let title = item["title"] as! String
-                    let itemLoc = item["location"] as! CLLocation
-                    let distance: Double = location.distance(from: itemLoc)
-                    let distanceString = loader.metersToRecognizableString(meters: distance)
-                    
-                    let translationMatrix = MatrixHelper.translate(x: 0, y: 0, z: 5) // TODO: calculate depth based on distance
-                    let bearing = MatrixHelper.bearingBetween(startLocation: location, endLocation: itemLoc)
-                    let rotationMatrix = MatrixHelper.rotateMatrixAroundY(degrees: bearing * -1, matrix: matrix_identity_float4x4)
-                    let transformMatrix = simd_mul(rotationMatrix, translationMatrix)
-                    let transform = simd_mul(originTransform, transformMatrix)
+            else if let pois = resultPOIs {
+                let annotRect = CGRect(x: 0, y: 0, width: 240, height: 73)
+                var poiNearest: Double = 0
+                var poiFarthest: Double = 0
+                // determine nearest and farthest poi
+                for poi in pois {
+                    let poiLoc = poi["location"] as! CLLocation
+                    let distanceMeters: Double = location.distance(from: poiLoc)
+                    if distanceMeters > poiFarthest {
+                        poiFarthest = distanceMeters
+                    }
+                    if poiNearest == 0 {
+                        poiNearest = distanceMeters
+                    }
+                    else if distanceMeters < poiNearest {
+                        poiNearest = distanceMeters
+                    }
+                }
+                let poiSpread = poiFarthest - poiNearest
+                // create annotations
+                for poi in pois {
+                    // get properties from poi
+                    let title = poi["title"] as! String
+                    let poiLoc = poi["location"] as! CLLocation
+                    let distanceMeters: Double = location.distance(from: poiLoc)
+                    let distance = loader.metersToRecognizableString(meters: distanceMeters)
+                    // calculate anchor distance from user (size) based on actual distance
+                    let anchorDist = (distanceMeters * Double(anchorSpread) / poiSpread) + Double(self.anchorNearest)
+                    // transformation matrix for placing poi
+                    let origin = MatrixHelper.translate(x: 0, y: 0, z: Float(anchorDist * -1))
+                    let bearing = MatrixHelper.bearingBetween(startLocation: location, endLocation: poiLoc)
+                    let transform = MatrixHelper.rotateMatrixAroundY(degrees: bearing * -1, matrix: origin)
                     
                     let anchor = ARAnchor(transform: transform)
-                    print("add anchor for title: \(title) and id \(anchor.identifier), bearing: \(bearing)˚, distance: \(distanceString)")
+                    // create an append annotation
+                    let annot = ARAnnotation(frame: annotRect, identifier: anchor.identifier, title: title)
+                    annot.distanceText = distance.0
+                    annot.distanceUnitsText = distance.1
+                    let _ = annot.validateAndSetLocation(location: poiLoc) // not used here, but might be useful for handling tap on annotation
+                    self.annotations.append(annot)
+                    //print("add anchor for title: \(title) and id \(anchor.identifier), bearing: \(bearing)˚, distance: \(anchorDist)")
                     self.sceneView.session.add(anchor: anchor)
                 }
-                // add 0 degrees north anchor for testing
-                let translationMatrix = MatrixHelper.translate(x: 0, y: 0, z: 2)
-                let anchor = ARAnchor(transform: translationMatrix)
+                /* add 0 degrees north anchor for testing
+                let origin = MatrixHelper.translate(x: 0, y: 0, z: -3)
+                let transform = MatrixHelper.rotateMatrixAroundY(degrees: 0, matrix: origin)
+                let anchor = ARAnchor(transform: transform)
+                let annot = ARAnnotation(frame: annotRect, identifier: anchor.identifier, title: "north")
+                self.annotations.append(annot)
                 self.sceneView.session.add(anchor: anchor)
-                
+                */
                 completion()
             }
             else {
@@ -95,11 +128,18 @@ class ARViewController: UIViewController, ARSKViewDelegate {
     
     func view(_ view: ARSKView, nodeFor anchor: ARAnchor) -> SKNode? {
         // Create and configure a node for the anchor added to the view's session.
-        print("view for anchor with id: \(anchor.identifier)")
-        let labelNode = SKLabelNode(text: "🏡 Home")
-        labelNode.horizontalAlignmentMode = .center
-        labelNode.verticalAlignmentMode = .center
-        return labelNode;
+        let annots = annotations.filter {
+            $0.identifier! == anchor.identifier
+        }
+        if annots.count > 0 {
+            let annot = annots.first
+            let image = annot?.getTooltipImage()
+            let tooltip = SKTexture(image: image!)
+            let sprite = SKSpriteNode(texture: tooltip)
+            sprite.name = "\(anchor.identifier)"
+            return sprite
+        }
+        return nil
     }
     
     func session(_ session: ARSession, didFailWithError error: Error) {

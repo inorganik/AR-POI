@@ -12,51 +12,51 @@ import UIKit
 
 struct PlaceLoader {
     
-    // requests items around user's location
-    func getItemsFor(location: CLLocation, completion: @escaping (_ items:[[String: Any]]?, _ errorMsg:String?) -> Void) {
-        //print("got items: \(result as AnyObject)")
-        var returnItems = [[String: Any]]()
+    // requests POIs around user's location
+    func getPOIsFor(location: CLLocation, completion: @escaping (_ items:[[String: Any]]?, _ errorMsg:String?) -> Void) {
+        
+        var returnPOIs = [[String: Any]]()
         
         let home = [
             "title": "Home",
             "location": CLLocation(latitude: 39.62578, longitude: -105.133526)
             ] as [String: Any]
-        returnItems.append(home)
+        returnPOIs.append(home)
         
         let littleton = [
             "title": "Littleton",
             "location": CLLocation(latitude: 39.61402, longitude: -105.0178)
             ] as [String: Any]
-        returnItems.append(littleton)
+        returnPOIs.append(littleton)
         
         let work = [
             "title": "Work", // 39.75053, -104.99957
             "location": CLLocation(latitude: 39.75053, longitude: -104.99957)
             ] as [String: Any]
-        returnItems.append(work)
+        returnPOIs.append(work)
         
         let boulder = [
             "title": "Boulder", // 40.01762, -105.28027
             "location": CLLocation(latitude: 40.01762, longitude: -105.25027)
             ] as [String: Any]
-        returnItems.append(boulder)
+        returnPOIs.append(boulder)
         
-        let fortCollins = [
-            "title": "Fort Collins", // 40.55294, -105.09642
-            "location": CLLocation(latitude: 40.55294, longitude: -105.09642)
+        let chatfield = [
+            "title": "Chatfield", // 39.5476, -105.07084
+            "location": CLLocation(latitude: 39.5476, longitude: -105.07084)
             ] as [String: Any]
-        returnItems.append(fortCollins)
+        returnPOIs.append(chatfield)
         
-        if returnItems.count > 0 {
-            completion(returnItems, nil)
+        if returnPOIs.count > 0 {
+            completion(returnPOIs, nil)
         }
         else {
-            completion(nil, "no items")
+            completion(nil, "no POIs")
         }
     }
     
     // turn meters into relatable distance
-    func metersToRecognizableString(meters: Double) -> String {
+    func metersToRecognizableString(meters: Double) -> (String, String) {
         
         let METERS_TO_FEET: Double = 3.2808399
         let FEET_TO_MILES: Double = 5280
@@ -69,13 +69,13 @@ struct PlaceLoader {
         if (distance < FOOTBALL_FIELD) {
             formatter.maximumFractionDigits = 0
             let formatted = formatter.string(from: NSNumber(value:distance));
-            return String(format: "%@ ft", formatted!)
+            return (String(format: "%@", formatted!), "feet")
         }
         else {
             formatter.maximumFractionDigits = 1
             let miles = distance / FEET_TO_MILES
             let formatted = formatter.string(from: NSNumber(value:miles))
-            return String(format: "%@ mi", formatted!)
+            return (String(format: "%@", formatted!), "miles")
         }
     }
 }
