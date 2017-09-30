@@ -28,9 +28,10 @@ struct MatrixHelper {
         return simd_mul(convertGLKMatrix4Tosimd_float4x4(rotationMatrix), matrix)
     }
     
-    // degrees - 0: horizon. positive: toward sky. negative: toward ground
+    // degrees - 0: horizon.
+    // northern hemisphere - positive: toward sky. negative: toward ground
+    // southern hemisphere - positive: toward ground. negative: toward sky
     static func translateMatrixFromHorizon(degrees: Float, matrix: simd_float4x4) -> simd_float4x4 {
-
         let radians = GLKMathDegreesToRadians(degrees)
         let horizonMatrix = GLKMatrix4MakeXRotation(radians)
         return simd_mul(convertGLKMatrix4Tosimd_float4x4(horizonMatrix), matrix)

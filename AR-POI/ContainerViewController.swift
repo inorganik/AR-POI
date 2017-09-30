@@ -14,6 +14,8 @@ import CoreMotion
 class ContainerViewController: UIViewController {
     
     @IBOutlet var headingLabel: UILabel!
+    @IBOutlet var countLabel: UILabel!
+    @IBOutlet var refreshButton: CustomButton!
     
     var arView: ARViewController!
     var showsDebuggingLabels: Bool = false
@@ -21,6 +23,7 @@ class ContainerViewController: UIViewController {
     fileprivate let locationManager = CLLocationManager()
     var requestedItems: Bool = false
     // motion
+    let debugHeading: Bool = false // make true to track heading
     let mmgr = CMMotionManager()
     
     override func viewDidLoad() {
@@ -29,6 +32,11 @@ class ContainerViewController: UIViewController {
         let screenSize = UIScreen.main.bounds.size
         view.backgroundColor = .black
         
+        headingLabel.isHidden = !debugHeading
+        countLabel.isHidden = true
+        refreshButton.type = .refreshButton
+        
+        // add AR subview
         arView = self.storyboard?.instantiateViewController(withIdentifier: "arView") as! ARViewController
         self.addChildViewController(arView)
         arView.view.frame = CGRect(x:0, y:0, width:screenSize.width, height:screenSize.height)
@@ -46,7 +54,9 @@ class ContainerViewController: UIViewController {
         super.viewDidAppear(animated)
         print("request when in use auth")
         locationManager.requestWhenInUseAuthorization()
-        startMotionTracking()
+        if debugHeading == true {
+        	startMotionTracking()
+        }
     }
     
     func addConstraintsFor(_ nestedView: UIView, width: CGFloat, idPrefix: String) {
@@ -66,8 +76,40 @@ class ContainerViewController: UIViewController {
         self.view.addConstraint(rightConstraint)
     }
     
+    @IBAction func refreshButtonTapped(_ sender: Any) {
+        
+        let notifName = Notification.Name("shouldRemoveNodes")
+        NotificationCenter.default.post(name: notifName, object: nil)
+        
+        self.countLabel.text = "Searching…"
+        requestedItems = false
+        locationManager.startUpdatingLocation()
+    }
+    
+    func showCount(_ count: Int) {
+        self.countLabel.isHidden = false
+        let placesPlural = (count == 1) ? "place" : "places"
+        self.countLabel.text = "\(count) \(placesPlural) found"
+    }
+    
     // MARK: - motion
     
+    // motion tracking allows us to get the heading for debugging (iOS 11+)
+    func startMotionTracking() {
+        mmgr.stopDeviceMotionUpdates()
+        mmgr.deviceMotionUpdateInterval = 0.5
+        mmgr.showsDeviceMovementDisplay = true
+        mmgr.startDeviceMotionUpdates(using: .xMagneticNorthZVertical, to: .main, withHandler: { (motionData: CMDeviceMotion?, error: Error?) in
+            if let err = error {
+                print("device motion update error", err.localizedDescription)
+            }
+            if let motion = motionData {
+                self.headingLabel.text = "heading: \(self.correctHeading(motion.heading, for: UIDevice.current.orientation))"
+            }
+        })
+    }
+    
+    // this corrects the heading for when device is in landscape
     func correctHeading(_ heading: Double, for orientation: UIDeviceOrientation) -> Double {
         var orientationCorrection: Double = 0
         if orientation == .landscapeRight { // home button left
@@ -84,20 +126,6 @@ class ContainerViewController: UIViewController {
             result = result + 360
         }
         return result
-    }
-    
-    func startMotionTracking() {
-        mmgr.stopDeviceMotionUpdates()
-        mmgr.deviceMotionUpdateInterval = 0.3
-        mmgr.showsDeviceMovementDisplay = true
-        mmgr.startDeviceMotionUpdates(using: .xMagneticNorthZVertical, to: .main, withHandler: { (motionData: CMDeviceMotion?, error: Error?) in
-            if let err = error {
-                print("device motion update error", err.localizedDescription)
-            }
-            if let motion = motionData {
-                self.headingLabel.text = "heading: \(self.correctHeading(motion.heading, for: UIDevice.current.orientation))"
-            }
-        })
     }
     
     // MARK: - spinner
@@ -162,8 +190,9 @@ extension ContainerViewController: CLLocationManagerDelegate {
                 if !requestedItems {
                     
                     let spinner = self.startSpinnerInView(view: self.view)
-                    self.arView.getAndDisplayItemsAroundLocation(loc, completion: { () in
+                    self.arView.getAndDisplayItemsAroundLocation(loc, completion: { (count) in
                         self.stopSpinner(spinnerView: spinner)
+                        self.showCount(count)
                     })
                     requestedItems = true
                 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OOJ-tD-efo">
-    <device id="retina4_7" orientation="portrait">
+    <device id="ipad9_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -14,7 +14,7 @@
             <objects>
                 <viewController id="OOJ-tD-efo" customClass="ContainerViewController" customModule="AR_POI" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tyS-Qp-25t" customClass="PassThroughView" customModule="AR_POI" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="heading:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cMA-ST-Yrl">
@@ -25,12 +25,52 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LHO-p2-ciD">
+                                <rect key="frame" x="0.0" y="964" width="768" height="60"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AxW-WI-oQq">
+                                        <rect key="frame" x="280.5" y="20" width="207" height="21"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="207" id="K5i-nO-nuD"/>
+                                            <constraint firstAttribute="height" constant="21" id="QmE-Bs-s4t"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LkO-Hn-dqa" customClass="CustomButton" customModule="AR_POI" customModuleProvider="target">
+                                        <rect key="frame" x="723" y="12" width="35" height="35"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="35" id="Pdn-15-tIW"/>
+                                            <constraint firstAttribute="width" constant="35" id="i6F-ae-iMB"/>
+                                        </constraints>
+                                        <connections>
+                                            <action selector="refreshButtonTapped:" destination="OOJ-tD-efo" eventType="touchUpInside" id="VfN-GC-G9A"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.019607843137254902" green="0.0" blue="0.0" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="AY9-k2-5gm"/>
+                                    <constraint firstItem="AxW-WI-oQq" firstAttribute="centerY" secondItem="LHO-p2-ciD" secondAttribute="centerY" id="Aqf-vi-K4C"/>
+                                    <constraint firstAttribute="trailing" secondItem="LkO-Hn-dqa" secondAttribute="trailing" constant="10" id="Dxw-Mx-01b"/>
+                                    <constraint firstItem="AxW-WI-oQq" firstAttribute="centerX" secondItem="LHO-p2-ciD" secondAttribute="centerX" id="mRW-eF-QOz"/>
+                                    <constraint firstItem="LkO-Hn-dqa" firstAttribute="centerY" secondItem="LHO-p2-ciD" secondAttribute="centerY" id="vcC-22-wXQ"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="LHO-p2-ciD" firstAttribute="leading" secondItem="yth-fQ-Pw4" secondAttribute="leading" id="6FR-J2-za3"/>
+                            <constraint firstItem="LHO-p2-ciD" firstAttribute="trailing" secondItem="yth-fQ-Pw4" secondAttribute="trailing" id="fTR-gi-QVb"/>
+                            <constraint firstItem="LHO-p2-ciD" firstAttribute="bottom" secondItem="yth-fQ-Pw4" secondAttribute="bottom" id="okE-zg-dhq"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="yth-fQ-Pw4"/>
                     </view>
                     <connections>
+                        <outlet property="countLabel" destination="AxW-WI-oQq" id="62s-o0-ILl"/>
                         <outlet property="headingLabel" destination="cMA-ST-Yrl" id="IXh-ej-7Pm"/>
+                        <outlet property="refreshButton" destination="LkO-Hn-dqa" id="RCP-aJ-Hvt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vpS-I8-CIj" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -42,7 +82,7 @@
             <objects>
                 <viewController storyboardIdentifier="arView" id="BV1-FR-VrT" customClass="ARViewController" customModule="AR_POI" customModuleProvider="target" sceneMemberID="viewController">
                     <arskView key="view" contentMode="scaleToFill" id="EO5-fy-WZq">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </arskView>
                     <connections>
@@ -51,6 +91,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="167" y="32"/>
         </scene>
     </scenes>
 </document>

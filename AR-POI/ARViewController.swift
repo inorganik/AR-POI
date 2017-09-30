@@ -19,23 +19,27 @@ class ARViewController: UIViewController, ARSKViewDelegate {
     var annotations = [ARAnnotation]()
     
     // set anchor distances (m) for nearest and farthest
-    let anchorNearest: Float = 1
-    let anchorFarthest: Float = 5
+    let anchorDistNearest: Float = 1
+    let anchorDistFarthest: Float = 4
+    // set anchor heights (degrees) for nearest and farthest
+    let anchorDegreesNearest: Double = 0
+    let anchorDegreesFarthest: Double = 15
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Set the view's delegate
         sceneView.delegate = self
         
         // Show statistics such as fps and node count
-        sceneView.showsFPS = true
-        sceneView.showsNodeCount = true
+        // sceneView.showsFPS = true
+        // sceneView.showsNodeCount = true
         
         // Load the SKScene from 'Scene.sks'
         if let scene = SKScene(fileNamed: "Scene") {
             sceneView.presentScene(scene)
         }
+        // listen for notif to remove nodes
+        NotificationCenter.default.addObserver(self, selector: #selector(removeNodes), name: Notification.Name("shouldRemoveNodes"), object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -56,22 +60,26 @@ class ARViewController: UIViewController, ARSKViewDelegate {
     
     // MARK: - POIs
     
-    func getAndDisplayItemsAroundLocation(_ location: CLLocation, completion: @escaping () -> Void) {
+    func getAndDisplayItemsAroundLocation(_ location: CLLocation, completion: @escaping (Int) -> Void) {
         
+        let searchTerm = "burgers"
         let loader = PlaceLoader()
-        let anchorSpread = anchorFarthest - anchorNearest
-        loader.getPOIsFor(location: location) { (resultPOIs, errMsg) in
+        
+        let anchorDistSpread = anchorDistFarthest - anchorDistNearest
+        let anchorHeightSpread = anchorDegreesFarthest - anchorDegreesNearest
+        
+        loader.requestPOIsWithGoogleSearch(term: searchTerm, location: location) { (resultPOIs, errMsg) in
             if let err = errMsg {
                 self.appDelegate.alertWithTitle("Error", message: err)
-                completion()
+                completion(0)
             }
             else if let pois = resultPOIs {
-                let annotRect = CGRect(x: 0, y: 0, width: 240, height: 73)
                 var poiNearest: Double = 0
                 var poiFarthest: Double = 0
                 // determine nearest and farthest poi
                 for poi in pois {
-                    let poiLoc = poi["location"] as! CLLocation
+                    let geometry = poi["geometry"] as? [String: Any]
+                    let poiLoc = loader.getLocationFrom(dict: geometry!)!
                     let distanceMeters: Double = location.distance(from: poiLoc)
                     if distanceMeters > poiFarthest {
                         poiFarthest = distanceMeters
@@ -83,21 +91,27 @@ class ARViewController: UIViewController, ARSKViewDelegate {
                         poiNearest = distanceMeters
                     }
                 }
+                let annotRect = CGRect(x: 0, y: 0, width: 240, height: 73)
                 let poiSpread = poiFarthest - poiNearest
                 // create annotations
                 for poi in pois {
                     // get properties from poi
-                    let title = poi["title"] as! String
-                    let poiLoc = poi["location"] as! CLLocation
+                    let title = poi["name"] as! String
+                    let geometry = poi["geometry"] as? [String: Any]
+                    let poiLoc = loader.getLocationFrom(dict: geometry!)!
                     let distanceMeters: Double = location.distance(from: poiLoc)
                     let distance = loader.metersToRecognizableString(meters: distanceMeters)
-                    // calculate anchor distance from user (size) based on actual distance
-                    let anchorDist = (distanceMeters * Double(anchorSpread) / poiSpread) + Double(self.anchorNearest)
+                    let bearing = MatrixHelper.bearingBetween(startLocation: location, endLocation: poiLoc)
+                    // calculate anchor distance and height from user based on actual distance
+                    let anchorDist = (distanceMeters * Double(anchorDistSpread) / poiSpread) + Double(self.anchorDistNearest)
+                    let anchorHeightDegrees = (distanceMeters * anchorHeightSpread / poiSpread) + self.anchorDegreesNearest
+                    let angleMultiplier: Float = (bearing > 270 || bearing < 90) ? 1.0 : -1.0
+                    let angleAdjust = Float(anchorHeightDegrees) * angleMultiplier
                     // transformation matrix for placing poi
                     let origin = MatrixHelper.translate(x: 0, y: 0, z: Float(anchorDist * -1))
-                    let bearing = MatrixHelper.bearingBetween(startLocation: location, endLocation: poiLoc)
-                    let transform = MatrixHelper.rotateMatrixAroundY(degrees: bearing * -1, matrix: origin)
-                    
+                    let bearingTransform = MatrixHelper.rotateMatrixAroundY(degrees: bearing * -1, matrix: origin)
+                    let transform = MatrixHelper.translateMatrixFromHorizon(degrees: angleAdjust, matrix: bearingTransform)
+                    // anchor
                     let anchor = ARAnchor(transform: transform)
                     // create an append annotation
                     let annot = ARAnnotation(frame: annotRect, identifier: anchor.identifier, title: title)
@@ -108,20 +122,18 @@ class ARViewController: UIViewController, ARSKViewDelegate {
                     //print("add anchor for title: \(title) and id \(anchor.identifier), bearing: \(bearing)˚, distance: \(anchorDist)")
                     self.sceneView.session.add(anchor: anchor)
                 }
-                /* add 0 degrees north anchor for testing
-                let origin = MatrixHelper.translate(x: 0, y: 0, z: -3)
-                let transform = MatrixHelper.rotateMatrixAroundY(degrees: 0, matrix: origin)
-                let anchor = ARAnchor(transform: transform)
-                let annot = ARAnnotation(frame: annotRect, identifier: anchor.identifier, title: "north")
-                self.annotations.append(annot)
-                self.sceneView.session.add(anchor: anchor)
-                */
-                completion()
+                completion(pois.count)
             }
             else {
-                completion()
+                completion(0)
             }
         }
+    }
+    
+    @objc func removeNodes() {
+        sceneView.scene?.enumerateChildNodes(withName: "poi", using: { (node, stop) in
+            node.removeFromParent()
+        })
     }
     
     // MARK: - ARSKViewDelegate
@@ -136,10 +148,16 @@ class ARViewController: UIViewController, ARSKViewDelegate {
             let image = annot?.getTooltipImage()
             let tooltip = SKTexture(image: image!)
             let sprite = SKSpriteNode(texture: tooltip)
-            sprite.name = "\(anchor.identifier)"
+            sprite.name = "poi"
             return sprite
         }
         return nil
+    }
+    
+    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        if case .limited(let reason) = camera.trackingState {
+            print("tracking state is limited: \(reason)")
+        }
     }
     
     func session(_ session: ARSession, didFailWithError error: Error) {

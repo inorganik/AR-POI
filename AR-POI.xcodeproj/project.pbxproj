@@ -20,6 +20,8 @@
 		7D40B3161F7D280D0081619B /* CustomViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D40B3111F7D28000081619B /* CustomViews.swift */; };
 		7D40B3181F7D28120081619B /* MatrixHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D40B3131F7D28000081619B /* MatrixHelper.swift */; };
 		7D40B31A1F7D29F00081619B /* PlaceLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D40B3191F7D29F00081619B /* PlaceLoader.swift */; };
+		7D40B31C1F7E76FE0081619B /* keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D40B31B1F7E76FE0081619B /* keys.swift */; };
+		7D40B31E1F8014C60081619B /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D40B31D1F8014C60081619B /* CustomButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,8 @@
 		7D40B3111F7D28000081619B /* CustomViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViews.swift; sourceTree = "<group>"; };
 		7D40B3131F7D28000081619B /* MatrixHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatrixHelper.swift; sourceTree = "<group>"; };
 		7D40B3191F7D29F00081619B /* PlaceLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceLoader.swift; sourceTree = "<group>"; };
+		7D40B31B1F7E76FE0081619B /* keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = keys.swift; sourceTree = "<group>"; };
+		7D40B31D1F8014C60081619B /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +96,8 @@
 				7D40B3111F7D28000081619B /* CustomViews.swift */,
 				7D40B3131F7D28000081619B /* MatrixHelper.swift */,
 				7D40B3191F7D29F00081619B /* PlaceLoader.swift */,
+				7D40B31B1F7E76FE0081619B /* keys.swift */,
+				7D40B31D1F8014C60081619B /* CustomButton.swift */,
 			);
 			path = "Supporting files";
 			sourceTree = "<group>";
@@ -174,7 +180,9 @@
 				7D40B3181F7D28120081619B /* MatrixHelper.swift in Sources */,
 				7D40B31A1F7D29F00081619B /* PlaceLoader.swift in Sources */,
 				7D40B2F91F7D27AF0081619B /* Scene.swift in Sources */,
+				7D40B31C1F7E76FE0081619B /* keys.swift in Sources */,
 				7D40B30D1F7D27F10081619B /* ContainerViewController.swift in Sources */,
+				7D40B31E1F8014C60081619B /* CustomButton.swift in Sources */,
 				7D40B3161F7D280D0081619B /* CustomViews.swift in Sources */,
 				7D40B2F51F7D27AF0081619B /* AppDelegate.swift in Sources */,
 				7D40B30B1F7D27E60081619B /* ARViewController.swift in Sources */,
