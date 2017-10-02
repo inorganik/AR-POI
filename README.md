@@ -1,7 +1,7 @@
 # AR-POI
 Use ARKit to view points of interest
 
-[demo](demo.GIF)
+![demo](demo.GIF)
 
 AR-POI uses the Google maps api to search places and presents them in an AR view. The main value you'll get from this lib is probably 1 or more of the following:
 
