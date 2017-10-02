@@ -18,13 +18,11 @@ let googleApiKey = "YOUR_KEY_HERE"
 ```
 Then change the **bundle identifier** and **code signing** and you should be good to go.
 
-Finally edit the place search term, or create a mechanism for user input. The search term is set in `ARViewController`, inside the `getAndDisplayItemsAroundLocation` method.
-
-
 ## Customizing
 
+- Edit the place search term, or create a mechanism for user input. The search term is set in `ARViewController`, inside the `getAndDisplayItemsAroundLocation` method.
 - `ARAnnotation.swift` is the file/class that you can use to customize the tooltip label. 
-- The tooltip design is controlled by the drawing code in `ARPOIUI.swift` which was generated with PaintCode. You can rexport the drawing code from PaintCode, then alter the drawing method if needed, which is used in `ARAnnotation.swift`. 
+- The tooltip design is controlled by the drawing code in `ARPOIUI.swift` which was generated with PaintCode. You can rexport the drawing code from the included PaintCode file, then alter the drawing method if needed, which is used in `ARAnnotation.swift`.
 - `ARViewController.swift` contains the code for the _placement_ of the tooltips. Properties of note include:
   - `anchorDistNearest`, `anchorDistFarthest` - for the distance in meters where the closest and farthest POIs will be placed in virtual space - this affects the size appearance, which helps convey distance
   - `anchorDegreesNearest` and `anchorDegreesFarthest` for the degrees up from the horizon the POI will be placed at, also to help convey distance, and to make POIs visible to help with overlapping.
