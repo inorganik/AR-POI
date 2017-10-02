@@ -18,6 +18,9 @@ let googleApiKey = "YOUR_KEY_HERE"
 ```
 Then change the **bundle identifier** and **code signing** and you should be good to go.
 
+Finally edit the place search term, or create a mechanism for user input. The search term is set in `ARViewController`, inside the `getAndDisplayItemsAroundLocation` method.
+
+
 ## Customizing
 
 - `ARAnnotation.swift` is the file/class that you can use to customize the tooltip label. 
