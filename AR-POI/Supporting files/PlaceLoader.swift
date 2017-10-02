@@ -80,28 +80,13 @@ struct PlaceLoader {
         
         var returnPOIs = [[String: Any]]()
         
-        let littleton = [
-            "title": "Littleton",
-            "location": CLLocation(latitude: 39.61402, longitude: -105.0178)
-            ] as [String: Any]
+        let littleton = generatePOIDictFor(title: "Littleton", location: CLLocation(latitude: 39.61402, longitude: -105.0178))
         returnPOIs.append(littleton)
-        
-        let work = [
-            "title": "Work", // 39.75053, -104.99957
-            "location": CLLocation(latitude: 39.75053, longitude: -104.99957)
-            ] as [String: Any]
+        let work = generatePOIDictFor(title: "Work", location: CLLocation(latitude: 39.75053, longitude: -104.99957))
         returnPOIs.append(work)
-        
-        let boulder = [
-            "title": "Boulder", // 40.01762, -105.28027
-            "location": CLLocation(latitude: 40.01762, longitude: -105.25027)
-            ] as [String: Any]
+        let boulder = generatePOIDictFor(title: "Boulder", location: CLLocation(latitude: 40.01762, longitude: -105.25027))
         returnPOIs.append(boulder)
-        
-        let chatfield = [
-            "title": "Chatfield Reservoir", // 39.5476, -105.07084
-            "location": CLLocation(latitude: 39.5476, longitude: -105.07084)
-            ] as [String: Any]
+        let chatfield = generatePOIDictFor(title: "Chatfield", location: CLLocation(latitude: 39.5476, longitude:-105.07084))
         returnPOIs.append(chatfield)
         
         if returnPOIs.count > 0 {
@@ -113,6 +98,19 @@ struct PlaceLoader {
     }
     
     // MARK: - Utility methods
+    
+    func generatePOIDictFor(title: String, location: CLLocation) -> [String: Any] {
+        let poi = [
+            "name": title,
+            "geometry": [
+                "location": [
+                    "lat": location.coordinate.latitude,
+                    "lng": location.coordinate.longitude
+                    ] as [String: Any]
+                ] as [String: Any]
+            ] as [String: Any]
+        return poi
+    }
     
     // extract CLLocation from dict
     func getLocationFrom(dict: [String: Any]) -> CLLocation? {

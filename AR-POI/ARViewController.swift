@@ -68,6 +68,7 @@ class ARViewController: UIViewController, ARSKViewDelegate {
         let anchorDistSpread = anchorDistFarthest - anchorDistNearest
         let anchorHeightSpread = anchorDegreesFarthest - anchorDegreesNearest
         
+        //loader.getStaticPOIsFor(location: location) { (resultPOIs, errMsg) in
         loader.requestPOIsWithGoogleSearch(term: searchTerm, location: location) { (resultPOIs, errMsg) in
             if let err = errMsg {
                 self.appDelegate.alertWithTitle("Error", message: err)

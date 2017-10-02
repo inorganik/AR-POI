@@ -110,7 +110,7 @@ public class ARPOIUI : NSObject {
         let distanceLabelStyle = NSMutableParagraphStyle()
         distanceLabelStyle.alignment = .center
         let distanceLabelFontAttributes = [
-            .font: UIFont.systemFont(ofSize: 21, weight: UIFontWeightMedium),
+            .font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.medium),
             .foregroundColor: UIColor.white,
             .paragraphStyle: distanceLabelStyle,
         ] as [NSAttributedStringKey: Any]
@@ -127,7 +127,7 @@ public class ARPOIUI : NSObject {
         let distanceUnitsStyle = NSMutableParagraphStyle()
         distanceUnitsStyle.alignment = .center
         let distanceUnitsFontAttributes = [
-            .font: UIFont.systemFont(ofSize: 10, weight: UIFontWeightMedium),
+            .font: UIFont.systemFont(ofSize: 10, weight: UIFont.Weight.medium),
             .foregroundColor: UIColor.white,
             .paragraphStyle: distanceUnitsStyle,
         ] as [NSAttributedStringKey: Any]
@@ -434,7 +434,7 @@ public class ARPOIUI : NSObject {
         let distanceLabelStyle = NSMutableParagraphStyle()
         distanceLabelStyle.alignment = .center
         let distanceLabelFontAttributes = [
-            .font: UIFont.systemFont(ofSize: 21, weight: UIFontWeightMedium),
+            .font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.medium),
             .foregroundColor: UIColor.white,
             .paragraphStyle: distanceLabelStyle,
         ] as [NSAttributedStringKey: Any]
@@ -451,7 +451,7 @@ public class ARPOIUI : NSObject {
         let distanceUnitsStyle = NSMutableParagraphStyle()
         distanceUnitsStyle.alignment = .center
         let distanceUnitsFontAttributes = [
-            .font: UIFont.systemFont(ofSize: 10, weight: UIFontWeightMedium),
+            .font: UIFont.systemFont(ofSize: 10, weight: UIFont.Weight.medium),
             .foregroundColor: UIColor.white,
             .paragraphStyle: distanceUnitsStyle,
         ] as [NSAttributedStringKey: Any]
